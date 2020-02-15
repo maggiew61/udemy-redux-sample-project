@@ -10,7 +10,10 @@ import reducer from './store/reducer'
 
 //this is where we mount our react app to the dom, so adding store here is making sense
 //takes the reducer as input
-const store = createStore(reducer)
+const store = createStore(
+    reducer,
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    )
 
 //provider injects store into react component
 ReactDOM.render(<Provider store = {store}><App /></Provider>, document.getElementById('root'));
