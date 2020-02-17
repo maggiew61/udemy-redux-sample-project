@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 
 import CounterControl from '../../components/CounterControl/CounterControl';
 import CounterOutput from '../../components/CounterOutput/CounterOutput';
+import * as actionTypes from '../../store/actions'
 
 class Counter extends Component {
     state = {
@@ -46,10 +47,10 @@ be executed which will then dispatch this action. With that we're dispatching an
                 <CounterControl label="Subtract 15" clicked={this.props.onSubtractCounter}  />
                 <hr/>
                 {/* no ()again, just a reference and will be executed automatically */}
-                <button onClick={this.props.onStoreResult}>store result</button>
+                <button onClick={()=>this.props.onStoreResult(this.props.ctr)}>store result</button>
                 <ul>
                     {this.props.storedResults.map(strResult =>(
-                    <li key={strResult.id} onClick = {this.props.onDeleteResult}>{strResult.value}</li>
+                    <li key={strResult.id} onClick = {()=>this.props.onDeleteResult(strResult.id)}>{strResult.value}</li>
                 ))}
                 </ul>
             </div>
@@ -61,8 +62,8 @@ be executed which will then dispatch this action. With that we're dispatching an
 const mapStateToProps = state =>{
     return {
         //meaning: give me the global redux state counter and gimme in the form of ctr to be used here
-        ctr: state.counter,
-        storedResults: state.results
+        ctr: state.ctr.counter,
+        storedResults: state.res.results
     }
 }
 
@@ -72,13 +73,13 @@ const mapDispatchToProps = dispatch =>{
         //holds a value, which is an anymous function, things on the right is automatically returned
         //when onIncremetcounter is exectued as a function then dispatch method
         //is going to get executed; we pass the js object in dispatch
-        onIncrementCounter: () => dispatch({type:'INCREMENT'}),
-        onDecrementCounter: () => dispatch({type:'DECREMENT'}),
-        onAddCounter: () => dispatch({type:'ADD',val:10}),
-        onSubtractCounter: () => dispatch({type:'SUBTRACT',val:-15}),
+        onIncrementCounter: () => dispatch({type:actionTypes.INCREMENT}),
+        onDecrementCounter: () => dispatch({type:actionTypes.DECREMENT}),
+        onAddCounter: () => dispatch({type:actionTypes.ADD,val:10}),
+        onSubtractCounter: () => dispatch({type:actionTypes.SUBTRACT,val:-15}),
         //no need to pass the payload because I will show use my results array in reducer
-        onStoreResult: () => dispatch({type:'STORE_RESULT'}),
-        onDeleteResult: () => dispatch({type:'DELETE_RESULT'})     
+        onStoreResult: result => dispatch({type:actionTypes.STORE_RESULT,result:result}),
+        onDeleteResult: id => dispatch({type:actionTypes.DELETE_RESULT,resultElId:id})     
     }
 }
 //decides which states and actions goes in here to action
